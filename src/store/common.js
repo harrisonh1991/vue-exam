@@ -42,8 +42,7 @@ const actions = {
   },
   updateSystemTime({ commit }) {
     const updateTime = () => {
-      const now = new Date()
-      commit('setSysTime', now)
+      commit('setSysTime', new Date())
     }
     if (!state.sysTime) {
       updateTime()

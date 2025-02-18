@@ -1,38 +1,49 @@
 <template>
-  <main v-if="curruentExamData" class="main">
-    <div>
-      <h2>{{ curruentExamData.title }}</h2>
-      <div v-for="option in curruentExamData.options" :key="option.id">
-        <input type="radio" :id="option.id" :value="option.label" />
-        <label :for="option.id">{{ option.label }}</label>
+  <main v-if="curruentQuestion" class="main">
+    <div class="main-content">
+      <h2 class="main-title">{{ curruentQuestion.title }}</h2>
+      <div class="main-content">
+        <FormRadio
+          v-if="curruentQuestion.type === 'select'"
+          v-model="answer"
+          :options="curruentQuestion.options"
+        />
+      </div>
+      <div class="main-footer flex justify-between">
+        <button class="btn main-btn" @click="handleClick(0)">Previous</button>
+        <button class="btn main-btn" @click="handleClick(1)">Next</button>
       </div>
     </div>
   </main>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
+import FormRadio from '@/components/form/radio.vue'
 export default {
   name: 'component-examination',
+  components: { FormRadio },
   computed: {
-    ...mapGetters('exam', ['examData']),
-    curruentExamData() {
-      return this.examData?.questions ? this.examData?.questions[this.currentIndex] : null
+    ...mapGetters('exam', ['examData', 'questionIndex']),
+    curruentQuestion() {
+      return this.examData?.questions ? this.examData?.questions[this.questionIndex] : null
     },
   },
   data() {
     return {
       currentIndex: 0,
+      answer: null,
     }
+  },
+  methods: {
+    ...mapActions('exam', ['previousQuestion', 'nextQuestion', 'answerQuestion']),
+  },
+  handleClick(i) {
+    i ? this.nextQuestion() : this.previousQuestion()
   },
 }
 </script>
 
-<style lang="scss" scoped>
-.main {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-}
+<style lang="scss">
+@use './main.scss';
 </style>

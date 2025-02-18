@@ -1,0 +1,28 @@
+@use '@/styles/utils/index.scss' as *;
+
+.main {
+  padding: 20px;
+  font-size: toRem(12);
+  &-title {
+    font-size: toRem(14);
+  }
+  &-content {
+    margin-top: 10px;
+  }
+  &-radio {
+    &-group {
+      & > * {
+        vertical-align: middle;
+      }
+      &:not(:first-child) {
+        margin-top: 5px;
+      }
+    }
+  }
+  &-footer {
+    margin-top: 50px;
+  }
+  &-btn {
+    min-width: 100px;
+  }
+}

@@ -1,0 +1,22 @@
+@use '@/styles/utils/index.scss' as *;
+
+.nav {
+  font-size: toRem(18);
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.4);
+  &-info {
+    padding: 10px 20px;
+    &-time {
+      font-size: toRem(12);
+      font-weight: bold;
+    }
+  }
+  &-progress {
+    margin-left: auto;
+    text-align: center;
+    font-size: toRem(12);
+    &-percent {
+      background-color: lightblue;
+      height: 3px;
+    }
+  }
+}
