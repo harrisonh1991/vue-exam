@@ -2,11 +2,11 @@
   <div class="form-group">
     <div class="form-item" v-for="option in options" :key="option.value">
       <input
-        type="radio"
-        :name="uid"
+        type="checkbox"
+        :id="`c-${uid}`"
         :value="option.value || option.label"
-        :checked="model === (option.value || option.label)"
-        @change="handleChange(option.value || option.label)"
+        :checked="model?.includes(option.value || option.label)"
+        @change="handleChange($event, option.value || option.label)"
       />
       <label class="form-label">{{ option.label }}</label>
     </div>
@@ -17,12 +17,11 @@
 import { ref, getCurrentInstance, defineEmits } from 'vue'
 const uid = ref(getCurrentInstance().uid)
 const emit = defineEmits(['change'])
+const model = defineModel([])
 
 defineOptions({
-  name: 'form-radio',
+  name: 'form-checkbox',
 })
-
-const model = defineModel()
 
 defineProps({
   options: {
@@ -35,10 +34,14 @@ defineProps({
   },
 })
 
-const handleChange = (value) => {
-  console.log('radio change', value)
-  model.value = value
-  emit('change', value)
+const handleChange = (event, value) => {
+  const isChecked = event.target.checked
+  if (isChecked) {
+    model.value.push(value)
+  } else {
+    model.value = model.value.filter((item) => item !== value)
+  }
+  emit('change', model.value)
 }
 </script>
 

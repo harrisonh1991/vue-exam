@@ -4,10 +4,10 @@
   </aside>
 </template>
 
-<script>
-export default {
+<script setup>
+defineOptions({
   name: 'layout-aside',
-}
+})
 </script>
 
 <style lang="scss"></style>

@@ -3,8 +3,11 @@ import { calculateTimeDifference } from '@/utils/util'
 const state = {
   timer: null,
   examData: {},
+  currentQuestion: {},
   questionIndex: 0,
   answers: {},
+  hasNext: false,
+  hasPrevious: false,
   info: {
     // 0: 未開始, 1: 進行中, 2: 已完成
     state: null,
@@ -26,6 +29,9 @@ const mutations = {
   },
   setQuestionIndex(state, data) {
     state.questionIndex = data
+    state.hasPrevious = data > 0
+    state.currentQuestion = state.examData.questions[data]
+    state.hasNext = data < state.examData.questions.length - 1
   },
   setAnswers(state, data) {
     state.answers = data
@@ -57,28 +63,27 @@ const actions = {
         questions: [
           {
             id: 1,
-            type: 'select',
+            type: 'radio',
             title: '以下哪個是 JavaScript API的請求類型?',
             score: 5,
             options: [
-              { value: 1, label: 'post' },
-              { value: 2, label: 'getter' },
-              { value: 3, label: 'poster' },
-              { value: 4, label: 'hello world' },
+              { label: 'post' },
+              { label: 'getter' },
+              { label: 'poster' },
+              { label: 'hello world' },
             ],
           },
           {
             id: 2,
-            type: 'select',
-            mutiple: true,
+            type: 'checkbox',
             title: '以下哪個不是 JavaScript 的數據類型？',
             score: 5,
             options: [
-              { value: 1, label: 'string' },
-              { value: 2, label: 'boolean' },
-              { value: 3, label: 'char' },
-              { value: 4, label: 'number' },
-              { value: 5, label: 'long' },
+              { label: 'string' },
+              { label: 'boolean' },
+              { label: 'char' },
+              { label: 'number' },
+              { label: 'long' },
             ],
           },
           {
@@ -109,24 +114,30 @@ const actions = {
       commit('setExamData', res.data)
 
       // 答案初始化
-      const answers = {}
-      res.data.questions.forEach((q) => {
-        answers[q.id] = null
-      })
+      let answers = {}
+      // 提取已提交的答案，沒有 api 暫時使用 sessionStorage 代替
+      let answers2 = sessionStorage.getItem(`exam-${res.data.id}`)
+      if (answers2) {
+        answers2 = JSON.parse(answers2)
+        answers = { ...answers, ...answers2 }
+      }
       commit('setAnswers', answers)
+      commit('setQuestionIndex', 0)
     }
   },
   previousQuestion({ commit, state }) {
-    const index = Math.max(state.currentIndex - 1, 0)
+    const index = Math.max(state.questionIndex - 1, 0)
     commit('setQuestionIndex', index)
   },
   nextQuestion({ commit, state }) {
-    const index = Math.max(state.currentIndex + 1, state.examData.questions.length)
+    const index = Math.min(state.questionIndex + 1, state.examData.questions.length - 1)
     commit('setQuestionIndex', index)
   },
-  answerQuestion({ commit, state }, answerId, data) {
-    state.answers[answerId] = data
-    commit('setAnswers', state.answers)
+  answerQuestion({ commit, state }, data) {
+    const answer2 = state.answers
+    answer2[state.currentQuestion.id] = data
+    commit('setAnswers', answer2)
+    sessionStorage.setItem(`exam-${state.examData.id}`, JSON.stringify(answer2))
   },
 }
 
