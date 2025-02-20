@@ -1,16 +1,13 @@
 <template v-if="isDesktop">
   <layoutHeader />
-  <layoutAside />
   <layoutMain />
 </template>
 <script>
 import { useStore, mapGetters } from 'vuex'
-import layoutAside from '@/components/layout/aside.vue'
 import layoutHeader from '@/components/layout/header.vue'
 import layoutMain from '@/components/layout/main.vue'
 export default {
   components: {
-    layoutAside,
     layoutHeader,
     layoutMain,
   },

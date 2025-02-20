@@ -14,7 +14,7 @@
 </template>
 
 <script setup>
-import { defineEmits, onMounted } from 'vue'
+import { onMounted } from 'vue'
 const emit = defineEmits(['change'])
 const model = defineModel()
 

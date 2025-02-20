@@ -47,8 +47,10 @@ const mutations = {
     state.questionIndex = data
     state.currentQuestion = state.examData.questions[data]
     state.answer = state.answers[state.currentQuestion.id]
+    console.log('currentQuestion', state.currentQuestion)
+    console.log('answer', state.answer)
     state.hasPrevious = data > 0
-    state.hasNext = data < state.examData.questions.length - 1
+    state.hasNext = data < state.examData.questions.length
   },
   setAnswer(state, obj) {
     if (obj.datas) {
@@ -67,6 +69,19 @@ const getters = {
   answer: (state) => state.answer,
   hasNext: (state) => state.hasNext,
   hasPrevious: (state) => state.hasPrevious,
+  answerValidList: (state) => {
+    const questions = state.examData.questions
+    return questions.map((question, index) => {
+      const id = question.id
+      let isValid = false
+      if (/checkbox/.test(question.type)) {
+        isValid = state.answers[id]?.length > 0
+      } else {
+        isValid = state.answers[id] !== null
+      }
+      return { title: question.title, id, isValid, index }
+    })
+  },
 }
 
 const actions = {
@@ -116,12 +131,15 @@ const actions = {
       commit('setQuestionIndex', 0)
     }
   },
+  setQuestionIndex({ commit }, data) {
+    commit('setQuestionIndex', data)
+  },
   previousQuestion({ commit, state }) {
     const index = Math.max(state.questionIndex - 1, 0)
     commit('setQuestionIndex', index)
   },
   nextQuestion({ commit, state }) {
-    const index = Math.min(state.questionIndex + 1, state.examData.questions.length - 1)
+    const index = Math.min(state.questionIndex + 1, state.examData.questions.length)
     commit('setQuestionIndex', index)
   },
   answerQuestion({ commit, state }, data) {
