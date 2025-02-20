@@ -3,10 +3,10 @@
     <div class="form-item" v-for="option in options" :key="option.value">
       <input
         type="radio"
-        :name="uid"
-        :value="option.value || option.label"
-        :checked="model === (option.value || option.label)"
-        @change="handleChange(option.value || option.label)"
+        :value="option.value"
+        :checked="model === option.value"
+        @change="handleChange(option.value)"
+        :disabled="disabled"
       />
       <label class="form-label">{{ option.label }}</label>
     </div>
@@ -14,8 +14,7 @@
 </template>
 
 <script setup>
-import { ref, getCurrentInstance, defineEmits } from 'vue'
-const uid = ref(getCurrentInstance().uid)
+import { defineEmits } from 'vue'
 const emit = defineEmits(['change'])
 
 defineOptions({
@@ -33,10 +32,13 @@ defineProps({
     type: Boolean,
     default: false,
   },
+  disabled: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const handleChange = (value) => {
-  console.log('radio change', value)
   model.value = value
   emit('change', value)
 }

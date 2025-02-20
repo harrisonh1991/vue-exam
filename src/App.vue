@@ -17,7 +17,7 @@ export default {
   computed: {
     ...mapGetters('common', ['isDesktop']),
   },
-  created() {
+  async created() {
     const store = useStore()
     store.dispatch('common/updateDeviceType')
     store.dispatch('common/updateSystemTime')

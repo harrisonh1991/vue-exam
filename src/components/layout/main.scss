@@ -1,8 +1,9 @@
 @use '@/styles/utils/index.scss' as *;
 
 .main {
-  padding: 20px;
   font-size: toRem(12);
+  max-width: 500px;
+  margin: 20px auto 0;
   &-title {
     font-size: toRem(14);
   }
@@ -20,9 +21,22 @@
     }
   }
   &-footer {
-    margin-top: 50px;
+    max-width: 300px;
+    margin: 50px auto 0;
   }
   &-btn {
     min-width: 100px;
+  }
+}
+
+@media (max-width: 767px) {
+  .main {
+    padding: 0 20px;
+  }
+}
+
+@media (min-width: 768px) {
+  .main {
+    width: 50%;
   }
 }

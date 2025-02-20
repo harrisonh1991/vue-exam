@@ -1,3 +1,18 @@
+/**
+ * 計算兩個時間的差值
+ * @param {Date} nowDate - 現在時間
+ * @param {Date} endTime - 目標時間
+ * @returns {{
+ *   distance: number,
+ *   day: number,
+ *   hour: number,
+ *   minute: number,
+ *   second: number
+ * }} 返回時間差的物件
+ * @example
+ * calculateTimeDifference('2024-01-01', '2024-01-03')
+ * // returns { distance: 86400000, day: 2, hour: 0, minute: 0, second: 0 }
+ */
 export const calculateTimeDifference = (nowDate, targetDate) => {
   if (!nowDate || !targetDate) return null
   nowDate = new Date(nowDate)

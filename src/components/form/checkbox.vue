@@ -3,10 +3,10 @@
     <div class="form-item" v-for="option in options" :key="option.value">
       <input
         type="checkbox"
-        :id="`c-${uid}`"
-        :value="option.value || option.label"
-        :checked="model?.includes(option.value || option.label)"
-        @change="handleChange($event, option.value || option.label)"
+        :value="option.value"
+        :checked="model?.includes(option.value)"
+        @change="handleChange($event, option.value)"
+        :disabled="disabled"
       />
       <label class="form-label">{{ option.label }}</label>
     </div>
@@ -14,10 +14,9 @@
 </template>
 
 <script setup>
-import { ref, getCurrentInstance, defineEmits } from 'vue'
-const uid = ref(getCurrentInstance().uid)
+import { defineEmits, onMounted } from 'vue'
 const emit = defineEmits(['change'])
-const model = defineModel([])
+const model = defineModel()
 
 defineOptions({
   name: 'form-checkbox',
@@ -32,6 +31,14 @@ defineProps({
     type: Boolean,
     default: false,
   },
+  disabled: {
+    type: Boolean,
+    default: false,
+  },
+})
+
+onMounted(() => {
+  if (!Array.isArray(model.value)) model.value = []
 })
 
 const handleChange = (event, value) => {

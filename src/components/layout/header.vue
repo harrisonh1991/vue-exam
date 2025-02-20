@@ -2,14 +2,17 @@
   <nav class="nav">
     <div class="nav-info flex align-center space-between">
       <div>
-        <h1>{{ examData.title }}</h1>
+        <h1 v-if="examData">{{ examData.title }}</h1>
         <span v-if="leftTime" class="nav-info-time" v-html="leftTime"></span>
       </div>
     </div>
     <div
-      v-if="info.state === 1"
+      v-if="info && info.state === EXAM_STATE.IN_PROGRESS"
       class="nav-progress"
-      :class="{ isStart: info.state === 0, isProgress: info.state === 1 }"
+      :class="{
+        isStart: info.state === EXAM_STATE.NOT_STARTED,
+        isProgress: info.state === EXAM_STATE.IN_PROGRESS,
+      }"
     >
       <div class="nav-progress-percent" :style="stylePercent"></div>
     </div>
@@ -17,6 +20,7 @@
 </template>
 
 <script setup>
+import { EXAM_STATE } from '@/utils/states'
 import { computed } from 'vue'
 import { useStore } from 'vuex'
 import { formatDateString } from '@/utils/util'
@@ -50,7 +54,7 @@ const distancePercent = computed(() => {
     const dateNow = new Date(sysTime.value).getTime()
     const top = dateEnd - dateNow
     const bottom = dateEnd - dateStart
-    return ((top / bottom) * 100).toFixed(2)
+    return (Math.max(top / bottom) * 100, 1).toFixed(2)
   }
   return 100
 })
