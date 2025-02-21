@@ -1,39 +1,46 @@
 <template>
-  <main class="main">
-    <template>
-      <h2 class="main-title">{{ currentQuestion ? currentQuestion.title : '全卷完' }}</h2>
-      <div class="main-content">
-        <template v-if="currentQuestion">
-          <FormRadio
-            v-if="currentQuestion.type === 'radio'"
-            v-model="answer"
-            :options="currentQuestion.options"
-            :disabled="examInfo.state !== 1"
-            @change="handleAnswer"
-          />
-          <FormCheckbox
-            v-else-if="currentQuestion.type === 'checkbox'"
-            v-model="answer"
-            :options="currentQuestion.options"
-            :disabled="examInfo.state !== 1"
-            @change="handleAnswer"
-          />
-          <FormInput
-            v-else-if="currentQuestion.type === 'input'"
-            v-model="answer"
-            :disabled="examInfo.state !== 1"
-            @change="handleAnswer"
-          />
-          <div v-else v-html="JSON.stringify(currentQuestion)"></div>
-        </template>
-      </div>
-      <div class="main-footer flex justify-between">
-        <button class="btn main-btn" @click="handleClick(0)" :disabled="!hasPrevious">
-          上一頁
-        </button>
-        <button class="btn main-btn" @click="handleClick(1)" :disabled="!hasNext">下一頁</button>
+  <main class="main" v-if="examData">
+    <template v-if="currentQuestion">
+      <div class="flex justify-between">
+        <h2 class="main-title">{{ questionIndex + 1 }}. {{ currentQuestion.title }}</h2>
+        <div v-if="currentQuestion" class="main-score">({{ currentQuestion.score }}分)</div>
       </div>
     </template>
+    <template v-else>
+      <p class="main-title main-end center">全卷完</p>
+    </template>
+    <div class="main-content">
+      <template v-if="currentQuestion">
+        <FormRadio
+          v-if="currentQuestion.type === 'radio'"
+          v-model="answer"
+          :options="currentQuestion.options"
+          :disabled="examInfo.state !== 1"
+          @change="handleAnswer"
+        />
+        <FormCheckbox
+          v-else-if="currentQuestion.type === 'checkbox'"
+          v-model="answer"
+          :options="currentQuestion.options"
+          :disabled="examInfo.state !== 1"
+          @change="handleAnswer"
+        />
+        <FormInput
+          v-else-if="currentQuestion.type === 'input'"
+          v-model="answer"
+          :disabled="examInfo.state !== 1"
+          @change="handleAnswer"
+        />
+        <div v-else v-html="JSON.stringify(currentQuestion)"></div>
+      </template>
+    </div>
+    <div class="main-footer flex justify-between align-center">
+      <button class="btn main-btn" @click="handleClick(0)" :disabled="!hasPrevious">上一頁</button>
+      <span v-if="currentQuestion">{{ questionIndex + 1 }}/{{ examData.questions.length }}題</span>
+      <button class="btn main-btn" @click="handleClick(1)">
+        {{ hasNext ? '下一頁' : '交卷' }}
+      </button>
+    </div>
   </main>
 </template>
 
@@ -65,7 +72,11 @@ const currentQuestion = computed(() => {
 // 0為上一題，1為下一題
 const handleClick = (i) => {
   if (i) {
-    store.dispatch('exam/nextQuestion')
+    if (hasNext.value) {
+      store.dispatch('exam/nextQuestion')
+    } else {
+      store.dispatch('exam/submitExam')
+    }
   } else {
     store.dispatch('exam/previousQuestion')
   }

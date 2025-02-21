@@ -46,9 +46,7 @@ const mutations = {
   setQuestionIndex(state, data) {
     state.questionIndex = data
     state.currentQuestion = state.examData.questions[data]
-    state.answer = state.answers[state.currentQuestion.id]
-    console.log('currentQuestion', state.currentQuestion)
-    console.log('answer', state.answer)
+    state.answer = state.answers[state.currentQuestion?.id]
     state.hasPrevious = data > 0
     state.hasNext = data < state.examData.questions.length
   },
@@ -77,7 +75,7 @@ const getters = {
       if (/checkbox/.test(question.type)) {
         isValid = state.answers[id]?.length > 0
       } else {
-        isValid = state.answers[id] !== null
+        isValid = state.answers[id] !== null && state.answers[id] !== ''
       }
       return { title: question.title, id, isValid, index }
     })
@@ -139,13 +137,16 @@ const actions = {
     commit('setQuestionIndex', index)
   },
   nextQuestion({ commit, state }) {
-    const index = Math.min(state.questionIndex + 1, state.examData.questions.length)
-    commit('setQuestionIndex', index)
+    commit('setQuestionIndex', state.questionIndex + 1)
   },
   answerQuestion({ commit, state }, data) {
     const answer2 = state.answers
     commit('setAnswer', { data })
     sessionStorage.setItem(`exam-${state.examData.id}`, JSON.stringify(answer2))
+  },
+  submitExam({ state }) {
+    sessionStorage.setItem(`exam-${state.examData.id}`, JSON.stringify(state.answers))
+    alert('交卷成功')
   },
 }
 

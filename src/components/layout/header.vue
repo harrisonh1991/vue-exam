@@ -5,7 +5,7 @@
         <h1 v-if="examData">{{ examData.title }}</h1>
         <span v-if="leftTime" class="nav-info-time" v-html="leftTime"></span>
       </div>
-      <a class="nav-option" @click.prevent="handleClickList">
+      <a class="nav-option pointer" @click.prevent="handleClickList">
         <font-awesome-icon icon="fa-solid fa-list" />
       </a>
     </div>
@@ -28,9 +28,13 @@
           <div class="flex space-between wrap">
             <div class="nav-item nav-item-1">題目</div>
             <div class="nav-item nav-item-2">已答題</div>
-            <template v-for="l in answerValidList" :key="l.id">
-              <a class="nav-item nav-item-1" @click="handleJumpToAnswer(l.index)">
-                {{ l.title }}
+            <template v-for="(l, li) in answerValidList" :key="l.id">
+              <a
+                class="nav-item nav-item-1 link"
+                @click="handleJumpToAnswer(l.index)"
+                :title="`轉跳到第${li + 1}題`"
+              >
+                {{ li + 1 }}. {{ l.title }}
               </a>
               <div class="nav-item nav-item-2" :class="{ error: !l.isValid }">
                 {{ l.isValid ? '是' : '否' }}
@@ -38,7 +42,7 @@
             </template>
           </div>
         </div>
-        <div class="tigs nav-tigs">*點擊目標時會自動轉跳</div>
+        <div class="tigs nav-tigs">*點擊題目時會自動轉跳</div>
       </template>
     </Popup>
   </nav>
@@ -130,7 +134,6 @@ const handlePopupClose = () => {
 }
 
 const handleJumpToAnswer = (index) => {
-  console.log('handleJumpToAnswer', index)
   store.dispatch('exam/setQuestionIndex', index)
   handlePopupClose()
 }

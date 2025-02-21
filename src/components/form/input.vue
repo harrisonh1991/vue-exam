@@ -5,7 +5,7 @@
         type="text"
         :value="model"
         @change="handleChange"
-        :placeholder="placeholder"
+        :placeholder="disabled ? '' : placeholder"
         :disabled="disabled"
       />
     </div>
@@ -14,10 +14,10 @@
 
 <script setup>
 const emit = defineEmits(['change'])
-const props = defineProps({
+defineProps({
   placeholder: {
     type: String,
-    default: 'Please enter your answer',
+    default: '請輸入你的答案',
   },
   disabled: {
     type: Boolean,
@@ -32,7 +32,6 @@ defineOptions({
 const model = defineModel()
 
 const handleChange = (event) => {
-  console.log('input change', event.target.value)
   model.value = event.target.value
   emit('change', event.target.value)
 }

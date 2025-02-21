@@ -4,6 +4,14 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-size: inherit;
+  line-height: normal;
+}
+
+html,
+body {
+  height: 100%;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 nav,
@@ -16,17 +24,14 @@ main {
   display: block;
 }
 
-img {
-  max-width: 100%;
-  height: auto;
-  display: block;
+a {
+  text-decoration: none;
+  color: inherit;
 }
 
-body {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: Arial, Helvetica, sans-serif;
+img {
+  max-width: 100%;
+  display: block;
 }
 
 h1,
@@ -35,8 +40,28 @@ h3,
 h4,
 h5,
 h6 {
-  margin: 0;
-  padding: 0;
+  font-weight: normal;
+}
+
+textarea,
+input[type='text'] {
+  border: 0;
+  border-bottom: 1px solid #000;
+  padding: 10px;
+  width: 100%;
+  background-color: white;
+  &:disabled {
+    background-color: lightgray;
+  }
+}
+
+button {
+  cursor: pointer;
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
 }
 
 .flex {
@@ -56,6 +81,10 @@ h6 {
   }
 }
 
+.center {
+  text-align: center;
+}
+
 .btn {
   padding: 10px 20px;
   background-color: #000;
@@ -67,24 +96,6 @@ h6 {
   }
 }
 
-textarea,
-input[type='text'] {
-  border: 0;
-  border-bottom: 1px solid #000;
-  padding: 10px;
-  width: 100%;
-  background-color: white;
-}
-
-button {
-  cursor: pointer;
-  &:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-    pointer-events: none;
-  }
-}
-
 .error {
   color: red;
 }
@@ -92,4 +103,29 @@ button {
 .tigs {
   font-size: toRem(12);
   color: gray;
+}
+
+.link {
+  cursor: pointer;
+}
+
+.absMask {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 5;
+}
+
+.rel-center {
+  position: relative;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.pointer {
+  cursor: pointer;
 }

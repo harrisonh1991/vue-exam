@@ -1,10 +1,6 @@
 @use '@/styles/utils/index.scss' as *;
 
 .popup {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
   padding: 20px;
   min-width: 300px;
   border: 1px solid;
@@ -12,12 +8,12 @@
   max-width: 500px;
   width: 80%;
   background-color: #fff;
-  z-index: 1;
   &-inner {
     position: relative;
     border-radius: 10px;
   }
   &-title {
-    font-size: toRem(12);
+    font-size: toRem(16);
+    font-weight: 600;
   }
 }

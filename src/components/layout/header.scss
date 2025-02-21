@@ -27,6 +27,7 @@
     text-align: left;
     max-height: 80vh;
     overflow-y: scroll;
+    font-size: toRem(14);
   }
   &-item {
     padding: 5px;
@@ -44,8 +45,13 @@
 }
 
 @media (min-width: 768px) {
-  .nav-table {
-    height: 50vh;
-    max-height: 500px;
+  .nav {
+    &-table {
+      height: 50vh;
+      max-height: 500px;
+    }
+    &-info {
+      padding: 10px 0;
+    }
   }
 }
