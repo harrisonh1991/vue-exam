@@ -9,7 +9,7 @@
     "preview": "vite preview",
     "lint": "eslint . --fix",
     "format": "prettier --write src/",
-    "deploy:githubpage": "pnpm run build && gh-pages -d dist"
+    "deploy:githubpage": "pnpm run build && git subtree push --prefix dist origin gh-pages && gh-pages -d dist"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.7.2",
