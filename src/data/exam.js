@@ -9,7 +9,7 @@ export const FakeExamData = {
     // 考試多少分鐘
     duration: 120,
     timeStart: '2025-02-18T14:00:00+08:00',
-    timeEnd: '2025-02-20T11:25:00+08:00',
+    timeEnd: '2037-12-30T00:00:00+08:00',
     // 開始後才會返回題目
     questions: [
       {
