@@ -7,9 +7,12 @@
     max-width: 500px;
     margin: 0 auto;
     padding: 10px 20px;
-    &-time {
-      font-size: toRem(12);
-      font-weight: bold;
+  }
+  &-time {
+    font-size: toRem(12);
+    font-weight: bold;
+    &-item {
+      margin-top: 5px;
     }
   }
   &-progress {

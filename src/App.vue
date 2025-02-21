@@ -1,6 +1,8 @@
-<template v-if="isDesktop">
-  <layoutHeader />
-  <layoutMain />
+<template>
+  <div v-if="examData">
+    <layoutHeader />
+    <layoutMain />
+  </div>
 </template>
 <script setup>
 import { onMounted, computed } from 'vue'
@@ -12,7 +14,7 @@ import layoutMain from '@/components/layout/main.vue'
 const store = useStore()
 
 // Computed
-computed(() => store.getters['common/isDesktop'])
+const examData = computed(() => store.getters['exam/examData'])
 
 // Lifecycle
 onMounted(async () => {

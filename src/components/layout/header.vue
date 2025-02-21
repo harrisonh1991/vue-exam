@@ -2,8 +2,23 @@
   <nav class="nav">
     <div class="nav-info flex align-center space-between">
       <div>
-        <h1 v-if="examData">{{ examData.title }}</h1>
-        <span v-if="leftTime" class="nav-info-time" v-html="leftTime"></span>
+        <h1>{{ examData.title }}</h1>
+        <div class="nav-time">
+          <template v-if="info.state === EXAM_STATE.FINISHED"> 已完結 </template>
+          <template v-else-if="info.state === EXAM_STATE.IN_PROGRESS">
+            <div class="nav-time-item">
+              <span>結束時間 :</span>
+              <span>{{ formatDateString(examData.timeEnd, 'yyyy-MM-dd hh:mm:ss') }}</span>
+            </div>
+            <div class="nav-time-item" :class="{ error: isCloseThanTenMinutes }">
+              <span>剩餘時間</span> : <span>{{ dateUnitToString(info.timeUnitEnd) }}</span>
+            </div>
+          </template>
+          <template v-else>
+            <span>開始時間 :</span>
+            <span>{{ formatDateString(examData.timeStart, 'yyyy-MM-dd hh:mm:ss') }}</span>
+          </template>
+        </div>
       </div>
       <a class="nav-option pointer" @click.prevent="handleClickList">
         <font-awesome-icon icon="fa-solid fa-list" />
@@ -17,7 +32,7 @@
         isProgress: info.state === EXAM_STATE.IN_PROGRESS,
       }"
     >
-      <div class="nav-progress-percent" :style="stylePercent"></div>
+      <div class="nav-progress-percent margin-center" :style="stylePercent"></div>
     </div>
     <Popup v-model="isPopupActive" @close="handlePopupClose">
       <template #title>
@@ -72,14 +87,9 @@ const examData = computed(() => store.getters['exam/examData'])
 const info = computed(() => store.getters['exam/info'])
 const answerValidList = computed(() => store.getters['exam/answerValidList'])
 
-// 計算剩餘時間
-const leftTime = computed(() => {
-  if (info.value.state === 2) return '已完結'
-  else if (info.value.state === 1)
-    return `結束時間 : ${formatDateString(examData.value.timeEnd, 'yyyy-MM-dd hh:mm:ss')}<br/>剩餘時間 : ${dateUnitToString(info.value.timeUnitEnd)}`
-  else if (info.value.state === 0)
-    return `開始時間 : ${formatDateString(examData.value.timeStart, 'yyyy-MM-dd hh:mm:ss')}<br/>${dateUnitToString(info.value.timeUnitStart)}`
-  return null
+const isCloseThanTenMinutes = computed(() => {
+  if (info.value.state === 1) return info.value.timeUnitEnd.distance <= 600000
+  return false
 })
 
 // 計算進度百分比
@@ -88,29 +98,21 @@ const distancePercent = computed(() => {
     const dateStart = new Date(examData.value.timeStart).getTime()
     const dateEnd = new Date(examData.value.timeEnd).getTime()
     const dateNow = new Date(sysTime.value).getTime()
-    const top = dateEnd - dateNow
-    const bottom = dateEnd - dateStart
-    return (Math.max(top / bottom) * 100, 1).toFixed(2)
+    // 計算已經過的時間佔總時間的百分比
+    const elapsed = dateNow - dateStart
+    const total = dateEnd - dateStart
+    const percent = (elapsed / total) * 100
+    // 確保百分比在 1-100 之間
+    return Math.min(Math.max(100 - percent, 1), 100).toFixed(2)
   }
   return 100
-})
-
-// 根據百分比計算顏色
-const colorByPercent = computed(() => {
-  const percent = (100 - distancePercent.value || 0) / 100
-  return `rgb(${getColorRangeByPercent(91, 255, percent)}, 
-             ${getColorRangeByPercent(255, 0, percent)}, 
-             ${getColorRangeByPercent(174, 0, percent)})`
 })
 
 // 計算樣式
 const stylePercent = computed(() => {
   return {
-    background: `linear-gradient(to right, 
-      white ${100 - distancePercent.value}%, 
-      ${colorByPercent.value} ${100 - distancePercent.value}%, 
-      ${100 - distancePercent.value}%, 
-      ${colorByPercent.value} ${distancePercent.value}%)`,
+    width: `${distancePercent.value}%`,
+    background: `${distancePercent.value > 60 ? 'green' : distancePercent.value > 30 ? 'orange' : 'red'}`,
   }
 })
 
@@ -118,11 +120,6 @@ const stylePercent = computed(() => {
 const dateUnitToString = (unit) => {
   if (!unit) return null
   return `${unit.day}d ${unit.hour}h ${unit.minute}m ${unit.second}s`
-}
-
-const getColorRangeByPercent = (start, end, percent) => {
-  const diff = start - end
-  return start - diff * percent
 }
 
 const handleClickList = () => {
