@@ -12,7 +12,6 @@ export default defineConfig({
     },
   },
   */
-  base: '/vue-exam/',
   plugins: [vue(), vueDevTools()],
   resolve: {
     alias: {
