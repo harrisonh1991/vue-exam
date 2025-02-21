@@ -12,7 +12,7 @@ export default defineConfig({
     },
   },
   */
-  name: 'vue-exam',
+  base: '/vue-exam/',
   plugins: [vue(), vueDevTools()],
   resolve: {
     alias: {
